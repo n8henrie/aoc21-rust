@@ -39,8 +39,8 @@ fn main() -> anyhow::Result<()> {
         env!("CARGO_MANIFEST_DIR")
     ))?;
     let parsed = parse_input(&input)?;
-    println!("Part 1: {}", part1(&parsed));
-    println!("Part 2: {}", part2(&parsed));
+    println!("day 01 part 1: {}", part1(&parsed));
+    println!("day 01 part 2: {}", part2(&parsed));
     Ok(())
 }
 
