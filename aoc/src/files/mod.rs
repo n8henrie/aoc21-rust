@@ -1,6 +1,6 @@
-use std::path::Path;
+use std::path::{Path, PathBuf};
 
-pub fn localpath(path: impl AsRef<Path>) -> anyhow::Result<impl AsRef<Path>> {
+pub fn localpath(path: impl AsRef<Path>) -> anyhow::Result<PathBuf> {
     let envvar = std::env::var("CARGO_MANIFEST_DIR")?;
     let basedir = Path::new(&envvar);
     Ok(basedir.join(path))
@@ -15,9 +15,11 @@ macro_rules! parse_input {
         use anyhow::{anyhow, Context};
         use std::fs::File;
         use std::io::{BufRead, BufReader};
+        use std::path::PathBuf;
 
-        File::open($path)
-            .context("unable to open file")
+        let path = PathBuf::from($path);
+        File::open(&path)
+            .context(format!("unable to open file {}", &path.display()))
             .and_then(|f| {
                 BufReader::new(f)
                     .lines()
@@ -43,7 +45,6 @@ mod tests {
     #[test]
     fn test_localpath() {
         let path = localpath("foo.txt").unwrap();
-        let path = path.as_ref().to_str().unwrap();
         assert!(path.ends_with("aoc21-rust/aoc/foo.txt"));
     }
 
