@@ -7,6 +7,13 @@ pub fn localpath(path: impl AsRef<Path>) -> anyhow::Result<PathBuf> {
 }
 
 #[macro_export]
+/// Parse input into a vec of specified type, or default to `Vec<String>`.
+/// Test out a link to [parse_input].
+/// ```rust
+/// use aoc::parse_input;
+/// assert_eq!(parse_input!("42\n24", u32).unwrap(), vec![42_u32, 24]);
+/// assert_eq!(parse_input!("42").unwrap(), vec![String::from("42")]);
+/// ```
 macro_rules! parse_input {
     ($path:expr) => {
         parse_input!($path, String)
@@ -14,25 +21,28 @@ macro_rules! parse_input {
     ($path:expr, $ty:ty) => {{
         use anyhow::{anyhow, Context};
         use std::fs::File;
+        use std::io::Read;
         use std::io::{BufRead, BufReader};
         use std::path::PathBuf;
 
         let path = PathBuf::from($path);
-        File::open(&path)
-            .context(format!("unable to open file {}", &path.display()))
-            .and_then(|f| {
-                BufReader::new(f)
-                    .lines()
-                    .map(|bufline| {
-                        bufline
-                            .context("error iterating over bufreader")
-                            .and_then(|line| {
-                                line.parse::<$ty>()
-                                    .context("Unable to parse as type")
-                            })
-                    })
-                    .collect::<anyhow::Result<Vec<_>>>()
+        let file = File::open(&path);
+
+        let input: Box<dyn Read> = if let Ok(f) = file {
+            Box::new(f)
+        } else {
+            Box::new(path.to_str().unwrap().as_bytes())
+        };
+        BufReader::new(input)
+            .lines()
+            .map(|bufline| {
+                bufline.context("error iterating over bufreader").and_then(
+                    |line| {
+                        line.parse::<$ty>().context("Unable to parse as type")
+                    },
+                )
             })
+            .collect::<anyhow::Result<Vec<_>>>()
             .map_err(|err| anyhow!(err))
     }};
 }
@@ -42,6 +52,8 @@ mod tests {
     use super::*;
     use std::io::Write;
 
+    static U32_TEST: &str = "123\n456";
+
     #[test]
     fn test_localpath() {
         let path = localpath("foo.txt").unwrap();
@@ -49,11 +61,18 @@ mod tests {
     }
 
     #[test]
-    fn test_read_to_u32() {
+    fn test_read_to_u32_from_file() {
         let mut tmpfile = tempfile::NamedTempFile::new().unwrap();
-        write!(tmpfile, "123\n456").unwrap();
+        write!(tmpfile, "{}", U32_TEST).unwrap();
         let expected = vec![123_u32, 456];
         let result = parse_input!(tmpfile.path(), u32);
+        assert_eq!(expected, result.unwrap());
+    }
+
+    #[test]
+    fn test_read_to_u32_from_str() {
+        let result = parse_input!(U32_TEST, u32);
+        let expected = vec![123_u32, 456];
         assert_eq!(expected, result.unwrap());
     }
 
