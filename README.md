@@ -1,6 +1,5 @@
 # aoc21-rust [![.github/workflows/ci.yml](https://github.com/n8henrie/aoc21-rust/actions/workflows/ci.yml/badge.svg?branch=master)](https://github.com/n8henrie/aoc21-rust/actions/workflows/ci.yml)
 
-
 I had a blast doing [Advent of Code 2018 in Rust][0], though I barely finished
 in time for AoC 2019. After taking a couple years off, I wanted to try again
 for 2021.
@@ -17,6 +16,8 @@ My goals:
     - Documenting my crates
     - Workspaces
     - Async? Doubt there is much opportunity in AoC
+
+Anything I've cared to document is at <https://n8henrie.com/aoc21-rust/aoc/>.
 
 I'll also probably do a few problems in Go to compare the feel, since using
 Rust is still a *labor* of love much of the time at my skill level and I could
