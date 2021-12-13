@@ -1,3 +1,4 @@
+pub use anyhow;
 use std::path::{Path, PathBuf};
 
 pub fn localpath(path: impl AsRef<Path>) -> anyhow::Result<PathBuf> {
@@ -19,11 +20,11 @@ macro_rules! parse_input {
         parse_input!($path, String)
     };
     ($path:expr, $ty:ty) => {{
-        use anyhow::{anyhow, Context};
         use std::fs::File;
         use std::io::Read;
         use std::io::{BufRead, BufReader};
         use std::path::PathBuf;
+        use $crate::files::anyhow::{self, anyhow, Context};
 
         let path = PathBuf::from($path);
         let file = File::open(&path);
