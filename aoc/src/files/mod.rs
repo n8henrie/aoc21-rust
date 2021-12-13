@@ -24,7 +24,7 @@ macro_rules! parse_input {
         use std::io::Read;
         use std::io::{BufRead, BufReader};
         use std::path::PathBuf;
-        use $crate::files::anyhow::{self, anyhow, Context};
+        use $crate::files::anyhow::{self, anyhow};
 
         let path = PathBuf::from($path);
         let file = File::open(&path);
@@ -37,11 +37,16 @@ macro_rules! parse_input {
         BufReader::new(input)
             .lines()
             .map(|bufline| {
-                bufline.context("error iterating over bufreader").and_then(
-                    |line| {
-                        line.parse::<$ty>().context("Unable to parse as type")
-                    },
+                anyhow::Context::context(
+                    bufline,
+                    "error iterating over bufreader",
                 )
+                .and_then(|line| {
+                    anyhow::Context::context(
+                        line.parse::<$ty>(),
+                        "Unable to parse as type",
+                    )
+                })
             })
             .collect::<anyhow::Result<Vec<_>>>()
             .map_err(|err| anyhow!(err))
