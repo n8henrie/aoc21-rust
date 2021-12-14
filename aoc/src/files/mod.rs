@@ -1,10 +1,21 @@
 pub use anyhow;
-use std::path::{Path, PathBuf};
 
-pub fn localpath(path: impl AsRef<Path>) -> anyhow::Result<PathBuf> {
-    let envvar = std::env::var("CARGO_MANIFEST_DIR")?;
-    let basedir = Path::new(&envvar);
-    Ok(basedir.join(path))
+/// Return a path to the input, starting at `CARGO_MANIFEST_DIR` of the
+/// *caller*, in a way that compiles the result into the final binary.
+///
+// Didn't work:
+//   - using a function with `env!` -- uses the `CARGO_MANIFEST_DIR` of this
+//   crate instead of the caller
+//   - use runtime env with `std::env` -- doesn't compile into the binary so
+//   fails if not run via `cargo run`
+#[macro_export]
+macro_rules! localpath {
+    ($tt:tt) => {{
+        use ::std::path::Path;
+        let envvar = env!("CARGO_MANIFEST_DIR");
+        let basedir = Path::new(&envvar);
+        basedir.join($tt)
+    }};
 }
 
 /// Parse input into a vec of specified type, or default to `Vec<String>`.
