@@ -1,0 +1,4 @@
+Benchmark 1: target/release/d03
+  Time (mean ± σ):       3.0 ms ±   1.2 ms    [User: 1.8 ms, System: 0.7 ms]
+  Range (min … max):     0.0 ms …   6.4 ms    393 runs
+ 
