@@ -7,7 +7,6 @@ pub fn localpath(path: impl AsRef<Path>) -> anyhow::Result<PathBuf> {
     Ok(basedir.join(path))
 }
 
-#[macro_export]
 /// Parse input into a vec of specified type, or default to `Vec<String>`.
 /// Test out a link to [parse_input].
 /// ```rust
@@ -15,16 +14,17 @@ pub fn localpath(path: impl AsRef<Path>) -> anyhow::Result<PathBuf> {
 /// assert_eq!(parse_input!("42\n24", u32).unwrap(), vec![42_u32, 24]);
 /// assert_eq!(parse_input!("42").unwrap(), vec![String::from("42")]);
 /// ```
+#[macro_export]
 macro_rules! parse_input {
     ($path:expr) => {
         parse_input!($path, String)
     };
     ($path:expr, $ty:ty) => {{
-        use std::fs::File;
-        use std::io::Read;
-        use std::io::{BufRead, BufReader};
-        use std::path::PathBuf;
-        use $crate::files::anyhow::{self, anyhow};
+        use ::std::fs::File;
+        use ::std::io::Read;
+        use ::std::io::{BufRead, BufReader};
+        use ::std::path::PathBuf;
+        use $crate::files::anyhow;
 
         let path = PathBuf::from($path);
         let file = File::open(&path);
@@ -49,7 +49,7 @@ macro_rules! parse_input {
                 })
             })
             .collect::<anyhow::Result<Vec<_>>>()
-            .map_err(|err| anyhow!(err))
+            .map_err(|err| anyhow::anyhow!(err))
     }};
 }
 
@@ -94,8 +94,6 @@ mod tests {
 
     #[test]
     fn test_read_to_custom_type() {
-        use anyhow::bail;
-
         #[derive(Debug, PartialEq)]
         struct Point {
             x: u32,
@@ -112,7 +110,7 @@ mod tests {
                         x: x.parse()?,
                         y: y.parse()?,
                     }),
-                    _ => bail!("Unable to parse"),
+                    _ => anyhow::bail!("Unable to parse"),
                 }
             }
         }
