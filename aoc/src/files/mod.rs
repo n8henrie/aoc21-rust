@@ -20,6 +20,7 @@ macro_rules! parse_input {
         parse_input!($path, String)
     };
     ($path:expr, $ty:ty) => {{
+        use ::std::boxed::Box;
         use ::std::fs::File;
         use ::std::io::Read;
         use ::std::io::{BufRead, BufReader};
