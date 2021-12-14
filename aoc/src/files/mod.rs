@@ -44,13 +44,12 @@ macro_rules! parse_input {
                 )
                 .and_then(|line| {
                     anyhow::Context::context(
-                        line.parse::<$ty>(),
+                        line.parse::<$ty>().map_err(|e| anyhow::anyhow!(e)),
                         "Unable to parse as type",
                     )
                 })
             })
             .collect::<anyhow::Result<Vec<_>>>()
-            .map_err(|err| anyhow::anyhow!(err))
     }};
 }
 
