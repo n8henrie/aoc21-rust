@@ -73,7 +73,7 @@ mod tests {
 
     #[test]
     fn test_localpath() {
-        let path = localpath("foo.txt").unwrap();
+        let path = localpath!("foo.txt");
         assert!(path.ends_with("aoc21-rust/aoc/foo.txt"));
     }
 
