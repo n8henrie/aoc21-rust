@@ -7,4 +7,4 @@ edition = "2021"
 
 [dependencies]
 anyhow = { version = "1", features = ["backtrace"] }
-aoc = { path = "../aoc" }
+aoc = { version = "0.1", path = "../aoc" }
