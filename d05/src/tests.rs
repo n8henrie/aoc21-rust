@@ -40,7 +40,7 @@ fn test_parse_input() {
     let diagram = parse_input(EXAMPLE_INPUT, false).unwrap();
     assert_eq!(diagram.0.len(), 10);
     assert_eq!(diagram.0[0].len(), 10);
-    assert_eq!(diagram[(0, 9)], 2);
+    assert_eq!(diagram.0[9][0], 2);
 }
 
 #[test]
