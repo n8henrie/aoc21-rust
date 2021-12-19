@@ -131,6 +131,14 @@ dependencies = [
 ]
 
 [[package]]
+name = "d05"
+version = "0.1.0"
+dependencies = [
+ "anyhow",
+ "aoc",
+]
+
+[[package]]
 name = "eyre"
 version = "0.6.5"
 source = "registry+https://github.com/rust-lang/crates.io-index"
