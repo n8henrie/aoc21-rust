@@ -1,4 +1,4 @@
 Benchmark 1: target/release/d05
-  Time (mean ± σ):       4.4 ms ±   0.9 ms    [User: 2.1 ms, System: 1.0 ms]
-  Range (min … max):     2.0 ms …  10.6 ms    351 runs
+  Time (mean ± σ):       3.2 ms ±   0.3 ms    [User: 1.9 ms, System: 0.9 ms]
+  Range (min … max):     2.1 ms …   4.2 ms    439 runs
  
