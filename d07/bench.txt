@@ -1,0 +1,4 @@
+Benchmark 1: target/release/d07
+  Time (mean ± σ):       6.8 ms ±   0.1 ms    [User: 6.3 ms, System: 0.4 ms]
+  Range (min … max):     6.4 ms …   7.2 ms    273 runs
+ 
