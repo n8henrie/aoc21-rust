@@ -1,0 +1,9 @@
+[package]
+edition = "2021"
+name = "d08"
+version = "0.1.0"
+
+[dependencies]
+anyhow = { version = "1", features = ["backtrace"] }
+aoc = { path = "../aoc" }
+nom = "7"
