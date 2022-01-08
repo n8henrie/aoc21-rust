@@ -18,10 +18,8 @@ fn part1(input: &[String]) -> usize {
         .count()
 }
 
-type HMap = HashMap<BTreeSet<char>, Display>;
-
 #[derive(Debug)]
-struct AnswerKey(HMap);
+struct AnswerKey(HashMap<BTreeSet<char>, Display>);
 
 impl AnswerKey {
     fn new<'a>(
@@ -70,109 +68,59 @@ impl AnswerKey {
             .find_word_for(8)
             .expect("unreachable: eight should already be solved");
 
-        loop {
-            let mut changed = false;
-            let mut solved = HashSet::new();
-
-            for (word, disp) in self.0.iter_mut() {
-                match disp {
-                    Display::Solved(v) => {
-                        solved.insert(*v);
-                    }
-                    Display::Maybe(vals) => {
-                        for v in solved.iter() {
-                            if vals.remove(v) {
-                                changed = true;
+        for (word, disp) in self.0.iter_mut() {
+            match disp {
+                Display::Solved(_) => continue,
+                Display::Unsolved => {
+                    *disp = match word.len() {
+                        // 2, 3, and 5 have 5 segments
+                        5 => {
+                            match (
+                                word.intersection(&one).count(),
+                                word.intersection(&four).count(),
+                            ) {
+                                (2, _) => Display::Solved(3),
+                                (1, 2) => Display::Solved(2),
+                                (1, 3) => Display::Solved(5),
+                                _ => unreachable!(
+                                    "3 should be solved, leaving only 2 and 5"
+                                ),
                             }
                         }
-                        if vals.len() == 1 {
-                            changed = true;
-                            let v = vals
-                                .iter()
+
+                        // 0, 6, and 9 have 6 segments
+                        6 => {
+                            let empty_segment = eight
+                                .difference(word)
                                 .next()
-                                .expect("unreachable, length was checked");
-                            solved.insert(*v);
-                            *disp = Display::Solved(*v);
-                            continue;
-                        }
+                                .expect(
+                                "unreachable: already matched on 6 segments",
+                            );
 
-                        match word.len() {
-                            // 2, 3, or 5
-                            5 => {
-                                if word.intersection(&one).count() == 2 {
-                                    changed = true;
-                                    solved.insert(3);
-                                    *disp = Display::Solved(3);
-                                    continue;
+                            match (
+                                word.intersection(&one).count(),
+                                four.contains(empty_segment),
+                            ) {
+                                (1, _) => {
+                                    // 0 and 9 both share 2 segments with 1
+                                    Display::Solved(6)
                                 }
-
-                                match word.intersection(&four).count() {
-                                    // 2
-                                    2 => {
-                                        changed = true;
-                                        solved.insert(2);
-                                        *disp = Display::Solved(2);
-                                    }
-                                    // 5
-                                    3 => {
-                                        changed = true;
-                                        solved.insert(5);
-                                        *disp = Display::Solved(5);
-                                    }
-                                    _ => unreachable!("3 should be solved, leaving only 2 and 5")
-                                }
+                                (2, true) => Display::Solved(0),
+                                (2, false) => Display::Solved(9),
+                                _ => unreachable!("logic error"),
                             }
-                            // 0, 6, or 9
-                            6 => {
-                                // Compare to 8
-                                {
-                                    let missing = eight.difference(word).next().expect("unreachable: matches on 7 segments");
-
-                                    // If 9, the missing segment is the
-                                    // vertical left lower, which will also be
-                                    // missing in 4; if 0 missing is middle, if
-                                    // 6 missing is vertcal top right; 4 has
-                                    // these
-                                    if !four.contains(missing) {
-                                        changed = true;
-                                        solved.insert(9);
-                                        *disp = Display::Solved(9);
-                                        continue;
-                                    } else if !one.contains(missing) {
-                                        changed = true;
-                                        solved.insert(0);
-                                        *disp = Display::Solved(0);
-                                        continue;
-                                    }
-                                }
-
-                                if word.intersection(&one).count() == 1 {
-                                    changed = true;
-                                    solved.insert(6);
-                                    *disp = Display::Solved(6);
-                                }
-                            }
-                            _ => (),
                         }
+                        _ => unreachable!("all digits should be solved"),
                     }
                 }
-            }
-            if !changed {
-                return;
             }
         }
     }
 }
 
-impl AsRef<HMap> for AnswerKey {
-    fn as_ref(&self) -> &HMap {
-        &self.0
-    }
-}
-
 #[derive(Clone, Debug, PartialEq)]
 enum Display {
-    Maybe(HashSet<u8>),
+    Unsolved,
     Solved(u8),
 }
 
@@ -187,6 +135,7 @@ fn decode_numbers(input: &str) -> anyhow::Result<AnswerKey> {
         iter.map(|word| BTreeSet::from_iter(word.chars())).collect();
     let mut ak =
         AnswerKey::new(first_half.iter().chain(output_values.iter()))?;
+
     ak.solve();
     Ok(ak)
 }
@@ -222,10 +171,8 @@ fn base_known_map() -> HashMap<u8, Display> {
     for (num_segments, val) in [(7, 8), (2, 1), (3, 7), (4, 4)] {
         hm.insert(num_segments, Display::Solved(val));
     }
-    for (num_segments, val) in [
-        (6, Display::Maybe(HashSet::from([0, 6, 9]))),
-        (5, Display::Maybe(HashSet::from([2, 3, 5]))),
-    ] {
+    for (num_segments, val) in [(6, Display::Unsolved), (5, Display::Unsolved)]
+    {
         hm.insert(num_segments, val);
     }
     hm
