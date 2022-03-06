@@ -26,10 +26,11 @@ very novice in Go). <https://github.com/n8henrie/aoc21-go>
 
 I may also try a few problems in Swift. Time will tell.
 
-## Other notable AoC '21 in Rust repos:
+## Other AoC '21 in Rust repos:
 
 - <https://github.com/timvisee/advent-of-code-2021>
     - *Very* fast and interesting, but all the bit twiddling in the first few
       days is not very readable *to a novice like me*.
+- <https://github.com/dimo414/advent-2021>
 
 [0]: https://github.com/n8henrie/advent2018-rust
