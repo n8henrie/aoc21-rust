@@ -1,0 +1,4 @@
+Benchmark 1: target/release/d11
+  Time (mean ± σ):       5.6 ms ±   2.2 ms    [User: 4.6 ms, System: 0.2 ms]
+  Range (min … max):     3.8 ms …  17.3 ms    394 runs
+ 
