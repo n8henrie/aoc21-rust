@@ -1,0 +1,1 @@
+initSidebarItems({"enum":[["Display",""]],"fn":[["base_known_map","Generate defaults based on the number of segments in a “word”. Some can be solved based on this information alone (see `part1`) whereas others can be narrowed down. The resulting map is {num_segments: possible_numbers}"],["decode_numbers",""],["main",""],["part1",""],["part2",""]],"struct":[["AnswerKey",""]]});

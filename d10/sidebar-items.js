@@ -1,0 +1,1 @@
+initSidebarItems({"enum":[["AocErr",""],["Direction",""],["Style",""]],"fn":[["main",""],["parse_input",""],["part1",""],["part2",""],["points_map",""],["points_map2",""]],"struct":[["BadInputErr",""],["ChunkPoint",""],["Line",""],["MatchingErr",""],["PrematureClosingErr",""]]});

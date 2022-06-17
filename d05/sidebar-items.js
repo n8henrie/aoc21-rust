@@ -1,0 +1,1 @@
+initSidebarItems({"fn":[["main",""],["parse_input",""],["solve",""]],"macro":[["delta",""]],"struct":[["Diagram",""],["Line",""],["Point",""]]});
